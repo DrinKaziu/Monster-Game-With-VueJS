@@ -3,22 +3,34 @@ new Vue({
   data: {
     playerHealth: 100,
     monsterHealth: 100,
-    gameIsRunning: false
+    gameIsRunning: false,
+    turns: []
   },
   methods: {
     startGame() {
       this.gameIsRunning = true;
       this.playerHealth = 100;
       this.monsterHealth = 100;
+      this.turns = [];
     },
     calculateBlow(minBlow, maxBlow) {
       return Math.max(Math.floor(Math.random() * maxBlow) + 1, minBlow);
     },
     monsterAttack() {
-      this.playerHealth -= this.calculateBlow(5, 12);
+      let blow = this.calculateBlow(5, 12)
+      this.playerHealth -= blow;
+      this.turns.unshift({
+        isPlayer: false,
+        text: "Monster hits Player for " + blow
+      })
     },
     attack() {
-      this.monsterHealth -= this.calculateBlow(3, 10);
+      let blow = this.calculateBlow(3, 10);
+      this.monsterHealth -= blow;
+      this.turns.unshift({
+        isPlayer: true,
+        text: "Player hits Monster for " + blow
+      })
       if(this.checkWin()) {
         return 
       }
@@ -26,7 +38,12 @@ new Vue({
       this.checkWin()
     },
     specialAttack() {
-      this.monsterHealth -= this.calculateBlow(10, 20);
+      let blow = this.calculateBlow(10, 20);
+      this.monsterHealth -= blow;
+      this.turns.unshift({
+        isPlayer: true,
+        text: "Player hits Monster HARD for " + blow
+      })
       if(this.checkWin()) {
         return 
       }
@@ -39,10 +56,14 @@ new Vue({
       } else {
         this.playerHealth = 100;
       }
+      this.turns.unshift({
+        isPlayer: true,
+        text: "Player healsfor for 10"
+      })
       this.monsterAttack();
     }, 
     giveUp() {
-
+      this.gameIsRunning = false; 
     },
     checkWin() {
       if(this.monsterHealth <= 0) {
