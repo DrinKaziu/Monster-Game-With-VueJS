@@ -58,7 +58,7 @@ new Vue({
       }
       this.turns.unshift({
         isPlayer: true,
-        text: "Player healsfor for 10"
+        text: "Player heals for for 10"
       })
       this.monsterAttack();
     }, 
